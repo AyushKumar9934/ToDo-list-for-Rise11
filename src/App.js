@@ -4,6 +4,7 @@ import { Todos } from "./MyComponents/Todos";
 import { Footer } from "./MyComponents/Footer";
 import { AddTodo } from "./MyComponents/AddTodo";
 import { About } from "./MyComponents/About";
+
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -17,7 +18,7 @@ import Signup from './MyComponents/Signup';
 function App() {
 
   
-  localStorage.setItem("user",JSON.stringify([{email:"ayu123@g.com",pass:"123"}]));
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
   let initTodo;
@@ -38,17 +39,37 @@ else{
 
   const onDelete = (todo) => {
     console.log("I am ondelete of todo", todo);
-    // Deleting this way in react does not work
-    // let index = todos.indexOf(todo);
-    // todos.splice(index, 1);
-
+   
     setTodos(todos.filter((e) => {
       return e !== todo;
     }));
     console.log("deleted", todos)
     localStorage.setItem("todos", JSON.stringify(todos));
   }
+  
+    const OnUpdate = (todo,newtitle,newdesc) => {
+      
+      let index = todos.findIndex((item) => item.sno === todo.sno);
+      
+      // Make a copy of the todo item and modify it
+      let updatedTodo = { ...todos[index] };
+      updatedTodo.title = newtitle // Replace this with the actual updated title
+      updatedTodo.desc = newdesc; // Replace this with the actual updated description
+      
+      // Make a copy of the todos array and replace the todo at the found index with the updated todo
+      let updatedTodos = [...todos];
+      updatedTodos[index] = updatedTodo;
+      
+      // Update the state
+      setTodos(updatedTodos);
+      
+      // Update the localStorage
+     
+        localStorage.setItem("todos", JSON.stringify(todos));
+    
+    }
 
+  
   const addTodo = (title, desc) => {
     console.log("I am adding this todo", title, desc)
     let sno;
@@ -79,7 +100,7 @@ else{
 
   const [user,setUser]=useState(initUser);
   
-    localStorage.setItem("user",JSON.stringify([{email:"ayu123@g.com",pass:"123"}]));
+   
   
   useEffect(()=>{
     localStorage.setItem("user",JSON.stringify(user));
@@ -87,7 +108,7 @@ else{
 
   const checkUser=(email,pass)=>{
     console.log("i am  checking User");
-    if(user.length==0){  // change this line
+    if(user.length==0){  
       alert("Sign up");
     }
     else{
@@ -119,13 +140,13 @@ const addUser=(email,pass)=>{
     <Router>
       <Header title="My Todos List" searchBar={false} /> 
       <Switch>
-          <Route exact path="/login" render={()=>{
+          <Route exact path="/" render={()=>{
             return(
             <>
             {isLoggedIn ? (
               <>
                 <AddTodo addTodo={addTodo} />
-                <Todos todos={todos} onDelete={onDelete} />
+                <Todos todos={todos} onDelete={onDelete} OnUpdate={OnUpdate}/>
               </>
             ) : (
               <Login checkUser={checkUser} />

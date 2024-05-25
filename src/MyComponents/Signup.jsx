@@ -1,9 +1,10 @@
 import React,{useState} from 'react'
 import Login from './Login';
-import { Link } from "react-router-dom";
+import { Link ,useHistory } from "react-router-dom";
 const Signup = ({addUser}) => {
     const[email,setEmail]=useState("");
     const[pass,setPass]=useState("");
+    const history = useHistory();
     const submit=(e)=>{
     
         e.preventDefault();
@@ -13,9 +14,10 @@ const Signup = ({addUser}) => {
         }
         else{
           addUser(email,pass);
-           // after add user i want to render my todo page 
+           
             setEmail("");
             setPass("");
+            history.push("/");
         }
     }
 
@@ -38,13 +40,12 @@ const Signup = ({addUser}) => {
                 <button type="submit" id="login">Sign Up</button>
                 <p id="error"></p>
                 
-                <p className="message">Already registered? <Link to="/login">Login Now</Link></p>
+                <p className="message">Already registered? <Link to="/">Login Now</Link></p>
               </form>
             </div>
           </div>
         
-          {/* <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="form-control" id="title" aria-describedby="emailHelp" />
-     */}
+         
  </div>
   )
 }
